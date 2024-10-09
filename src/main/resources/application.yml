@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: spring-batch-restudy
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  batch:
+      jdbc:
+        initialize-schema: always
+        platform: postgresql
+      job:
+        enabled: false
