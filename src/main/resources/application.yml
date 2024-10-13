@@ -14,7 +14,7 @@ spring:
 #    job:
 #      enabled: false
     job:
-      name: JobParameterStudyConfig-Job
+      name: ExecutionContextStudyConfig-Job
   datasource:
     global:
       url: jdbc:postgresql://localhost:5432/postgres
