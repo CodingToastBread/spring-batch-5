@@ -10,11 +10,9 @@ spring:
   batch:
     jdbc:
       platform: postgresql
-      initialize-schema: always
-#    job:
-#      enabled: false
+      initialize-schema: never
     job:
-      name: ExecutionContextStudyConfig-Job
+      name: stepChunkStudyConfigJob
   datasource:
     global:
       url: jdbc:postgresql://localhost:5432/postgres
@@ -29,5 +27,5 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.batch: debug
+    org.springframework.batch: info
 
