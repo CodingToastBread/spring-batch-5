@@ -12,7 +12,8 @@ spring:
       platform: postgresql
       initialize-schema: never
     job:
-      name: conditionalJobConfigJob
+#      name: conditionalJobConfigJob
+      enabled: false
   datasource:
     global:
       url: jdbc:postgresql://localhost:5432/postgres
