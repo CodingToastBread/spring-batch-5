@@ -1,5 +1,6 @@
 package coding.toast.batch.job.quartz;
 
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -25,8 +26,11 @@ public class BatchScheduledJob extends QuartzJobBean {
 	
 	@Override
 	protected void executeInternal(@NonNull JobExecutionContext context) {
+		JobDataMap dataMap = context.getMergedJobDataMap();
+		
 		JobParameters jobParameters = new JobParametersBuilder(this.jobExplorer)
 			.getNextJobParameters(this.job)
+			.addJobParameters((JobParameters)dataMap.get("jobParamFromArguments"))
 			.toJobParameters();
 		
 		try {
