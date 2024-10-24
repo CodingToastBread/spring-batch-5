@@ -10,10 +10,10 @@ spring:
   batch:
     jdbc:
       platform: postgresql
-      initialize-schema: never
+      initialize-schema: always
     job:
-#      name: conditionalJobConfigJob
-      enabled: false
+      name: stopTestConfiguration-tx-job
+#      enabled: false
   datasource:
     global:
       url: jdbc:postgresql://localhost:5432/postgres
@@ -28,5 +28,5 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.batch: info
+    org.springframework.batch: debug
 
