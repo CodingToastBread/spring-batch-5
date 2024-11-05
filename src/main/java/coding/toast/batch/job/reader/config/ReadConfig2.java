@@ -6,6 +6,7 @@ import coding.toast.batch.job.reader.reader.CustomerFileReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -13,7 +14,9 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.mapping.PatternMatchingCompositeLineMapper;
@@ -36,7 +39,7 @@ public class ReadConfig2 {
 	private final PlatformTransactionManager txManager;
 	
 	@Bean("readConfigJob2")
-	Job readConfigJob2() {
+	public Job readConfigJob2() {
 		return new JobBuilder("readConfigJob2", jobRepository)
 			.start(readConfigStep())
 			.incrementer(new RunIdIncrementer())
@@ -44,27 +47,43 @@ public class ReadConfig2 {
 	}
 	
 	@Bean("readConfigStep2")
-	Step readConfigStep() {
+	public Step readConfigStep() {
 		return new StepBuilder("readConfigStep2", jobRepository)
 			.chunk(10, txManager)
 			// .reader(readConfigItemReader2())
-			.reader(customerFileReader())
+			// .reader(customerFileReader())
+			.reader(multiResourceItemReader())
 			.writer(readConfigItemWriter2())
+			.build();
+	}
+	
+	@Bean
+	@StepScope
+	public MultiResourceItemReader multiResourceItemReader() {
+		return new MultiResourceItemReaderBuilder<>()
+			.name("multiCustomerReader")
+			.resources(
+				new ClassPathResource("job/reader/customerMultiFormat.csv"),
+				new ClassPathResource("job/reader/customerMultiFormat1.csv"),
+				new ClassPathResource("job/reader/customerMultiFormat2.csv"))
+			.delegate(customerFileReader())
 			.build();
 	}
 	
 	@Bean("readConfig2FileReader")
 	@StepScope
 	public CustomerFileReader customerFileReader() {
+		// customerFileReader.setResource(new ClassPathResource("job/reader/customerMultiFormat.csv"));
 		return new CustomerFileReader(readConfigItemReader2());
 	}
 	
 	@Bean("readConfigItemReader2")
+	@StepScope
 	public FlatFileItemReader readConfigItemReader2() {
 		return new FlatFileItemReaderBuilder()
 			.name("readConfigItemReader2")
 			.lineMapper(lineTokenizer())
-			.resource(new ClassPathResource("job/reader/customerMultiFormat.csv"))
+			// .resource(new ClassPathResource("job/reader/customerMultiFormat.csv"))
 			.build();
 	}
 	
@@ -116,7 +135,7 @@ public class ReadConfig2 {
 	}
 	
 	@Bean("readConfigItemWriter2")
-	ItemWriter readConfigItemWriter2() {
+	public ItemWriter readConfigItemWriter2() {
 		return chunk -> chunk.getItems().forEach(System.out::println);
 	}
 	

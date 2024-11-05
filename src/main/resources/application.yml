@@ -28,5 +28,5 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.batch: debug
+#    org.springframework.batch: debug
 
