@@ -12,7 +12,7 @@ spring:
       platform: postgresql
       initialize-schema: always
     job:
-      name: readConfigJob2
+      name: customItemStreamConfigJob
 #      enabled: false
   datasource:
     global:
@@ -28,5 +28,5 @@ spring:
 logging:
   level:
     root: info
-#    org.springframework.batch: debug
+    org.springframework.batch: debug
 
